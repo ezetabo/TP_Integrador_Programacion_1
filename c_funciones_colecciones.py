@@ -1,4 +1,4 @@
-from sys import maxsize
+from statistics import mean
 from e_funciones_generales import *
 from d_modelo import *
 
@@ -108,8 +108,7 @@ def buscar_paises_por_nombre(paises:list[dict], nombre:str)->list[dict]:
     encontrados = []    
     for pais in paises:
         if normalizar_cadena(pais['nombre']) == normalizar_cadena(nombre):
-            encontrados.append(pais)
-            break
+            return [pais]            
         elif normalizar_cadena(pais['nombre']).startswith(normalizar_cadena(nombre)):
             encontrados.append(pais)    
     return encontrados
@@ -125,13 +124,7 @@ def buscar_mayor_campo(paises:list[dict],*,campo='poblacion')->dict:
     Retorno:        
         El país con el mayor valor en el campo especificado.
     '''
-    mayor_valor = -maxsize-1
-    mayor_pais = {}
-    for pais in paises:
-        if pais[normalizar_cadena(campo)] > mayor_valor:
-            mayor_valor = pais[normalizar_cadena(campo)]
-            mayor_pais = pais
-    return mayor_pais
+    return max(paises, key=lambda pais: pais[normalizar_cadena(campo)])
 
 def buscar_menor_campo(paises:list[dict],*,campo='poblacion')->dict:
     '''
@@ -144,13 +137,7 @@ def buscar_menor_campo(paises:list[dict],*,campo='poblacion')->dict:
     Retorno:
         El país con el menor valor en el campo especificado.
     '''
-    menor_valor = maxsize
-    menor_pais = {}
-    for pais in paises:
-        if pais[normalizar_cadena(campo)] < menor_valor:
-            menor_valor = pais[normalizar_cadena(campo)]
-            menor_pais = pais
-    return menor_pais
+    return min(paises, key=lambda pais: pais[normalizar_cadena(campo)])
 
 def pedir_opcion_listado(mensaje, listado):
     '''
@@ -165,13 +152,35 @@ def pedir_opcion_listado(mensaje, listado):
     return pedir_entero(mensaje, minimo=1, maximo=len(listado))
 
 def pedir_un_pais(mensaje:str,paises:list[dict])->dict:
+    '''
+    Muestra el listado de paises, pide la seleccion de uno por consola y retorna dicho pais.
+    
+    Parámetros:
+        mensaje (str): Texto que se mostrará al usuario al pedir la entrada.
+        paises (list[dict]): Lista de países.
+        
+    Retorno:
+        El país seleccionado.
+    '''
     mostrar_paises(paises)
     posicion = pedir_entero(mensaje,minimo=1,maximo=len(paises))
     return paises[posicion-1]
+
 # =====================
 # ABM
 # =====================
 def existe_pais_en_lista(paises: list[dict], nombre: str)->bool:
+    '''
+    Busca dentro de una lista la existencia de un pais, lo hace por el campo nombre.
+    No distingue entre mayusculas, minisculas ni acentos.
+    Parámetros:
+        paises (list[dict]): Lista de países.
+        nombre (str): Nombre del pais a buscar.
+    
+    Retorno:
+        True si el pais existe dentro de la lista.
+        False si no existe.
+    '''
     for pais in paises:
         if normalizar_cadena(pais['nombre']) == normalizar_cadena(nombre):
             return True
@@ -195,7 +204,7 @@ def crear_pais_consola(paises: list[dict],continentes:list[str])->bool:
             continue
         break
     poblacion = pedir_entero('Ingrese la cantidad de habitantes: ',minimo=1)
-    superficie = pedir_flotante('Ingrese la superficie: ')
+    superficie = pedir_flotante('Ingrese la superficie: ',minimo=1)
     posicion = pedir_opcion_listado('Elija un continente: ',continentes[:-1])
     continente = continentes[posicion-1]
     pais = crear_pais(nombre,poblacion,superficie,continente)
@@ -329,12 +338,7 @@ def calcular_promedio_por_continente(paises:list[dict],*,continente='amrica del 
         float
             Promedio del campo solicitado para el continente especificado.
     '''
-    acumulador = 0
-    cantidad_paises = contar_paises_por_continente(paises,continente=continente)
-    for pais in paises:
-        if (normalizar_cadena(pais['continente']) == normalizar_cadena(continente)) or normalizar_cadena(continente) == 'todos':
-            acumulador += pais[normalizar_cadena(campo)]
-    promedio = acumulador / cantidad_paises
-    return promedio
+    datos = [pais[campo] for pais in paises if pais['continente'].lower() == continente.lower() or continente.lower() == 'todos']
+    return  mean(datos) 
 
 

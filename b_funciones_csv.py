@@ -1,4 +1,6 @@
 import csv
+from datetime import datetime
+import os
 import tkinter as tk
 from tkinter import filedialog
 from c_funciones_colecciones import *
@@ -80,3 +82,22 @@ def guardar_paises_en_csv(paises: list[dict[str, object]], ruta: str):
         lineas.append(linea)
     with open(ruta, 'w', encoding='utf-8-sig') as archivo:
         archivo.writelines(lineas)
+
+def generar_nombre_archivo(nombre,*,extension='csv'):
+    '''
+    Crea el nombre completo de un archivo con la extension seleccionada.
+        
+    Parámetros:
+        nombre (str): string para el nombre del archivo.
+        extension (str, opcional): string para la extencion del archivo. Por defecto CSV.
+    Retorno:
+        Si el nombre del archivo no existe, retorna el nombre con la extension seleccionada.
+        Si el nombre ya existe, retorna el nombre con la hora de creacion y la extension seleccionada.
+    '''
+    nombre_completo = f'{nombre}.{extension}'    
+    if os.path.exists(nombre_completo):
+        nombre_completo = f'{nombre}_{datetime.now().strftime("%H_%M_%S")}.{extension}'
+    return nombre_completo
+
+
+

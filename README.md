@@ -11,7 +11,7 @@ Aplicación en **Python 3.13** que permite gestionar información de países a p
 Incluye funcionalidades de búsqueda, filtrado, ordenamiento y estadísticas.
 
 ## 🚀 Funcionalidades
-- Carga de archivo mediante interfaz grafica.
+- Carga de archivo mediante interfaz grafica o la creacion de uno nuevo.
 - Buscar países por nombre (coincidencia parcial o exacta).  
 - Filtrar países por:
   - Continente  
@@ -32,7 +32,7 @@ Incluye funcionalidades de búsqueda, filtrado, ordenamiento y estadísticas.
 - Se incorporó agregar países
 - Se incorporó actualizar superficie y/o población
 - Se incorporó elimiar un país
-
+- Se permite trabajar con nuevos archivos
 ## 📂 Estructura del proyecto
 
 ![Estructura](./imagenes/estructura.jpg)

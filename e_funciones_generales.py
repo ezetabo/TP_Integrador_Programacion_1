@@ -12,7 +12,7 @@ def pedir_cadena(mensaje:str, *, largo=50)->str:
     '''
     while True:
         cadena = input(mensaje).strip()
-        if cadena.isspace():
+        if not cadena:
             print('**ERROR** Debe ingresar un valor.')
             continue
         if len(cadena) > largo:
@@ -32,7 +32,7 @@ def pedir_cadena_solo_letras(mensaje:str, *, largo=50)->str:
     '''
     while True:
         cadena = input(mensaje).strip()
-        if not cadena.isalpha():
+        if not cadena.isalpha() or not cadena:
             print('**ERROR** Los datos ingresados deben ser solo letras.')
             continue
         if len(cadena) > largo:
@@ -54,6 +54,9 @@ def pedir_entero(mensaje:str, *, minimo=-maxsize-1, maximo=maxsize)->int:
     while True:
         negativo = False
         numero = input(mensaje).strip()
+        if not numero:
+            print('**ERROR** Debe ingresar un valor.')
+            continue
         if numero[0] == '-':
             negativo = True
             numero = numero.replace('-','')
@@ -84,6 +87,9 @@ def pedir_flotante(mensaje:str, *, minimo=-float_info.max, maximo=float_info.max
     while True:
         negativo = False
         numero = input(mensaje).strip()
+        if not numero:
+            print('**ERROR** Debe ingresar un valor.')
+            continue
         if numero[0] == '-':
             negativo = True
             numero = numero.replace('-','')      

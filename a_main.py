@@ -8,7 +8,8 @@ menu_principal = ['Cargar archivo .csv', 'Agregar un país','Actualizar un país
                 'Mostrar estadísticas','Eliminar un país', 'Salir']
 menu_filtrado = ['Fitrar por contiente', 'Filtrar rango de poblacion', 'Filtrar por rango de superficie' ]
 menu_ordenamiento = ['nombre', 'poblacion', 'superficie']
-menu_estadisticas = ['País con mayor y menor población', 'País con mayor y menor superficie', 'Promedio de población', 'Promedio de superficie','Cantidad de países por continente']
+menu_estadisticas = ['País con mayor y menor población', 'País con mayor y menor superficie', 'Promedio de población', 
+                    'Promedio de superficie','Cantidad de países por continente']
 opciones_actualizar = ['poblacion','superficie']
 
 while True:
@@ -16,20 +17,24 @@ while True:
     match pedir_opcion_listado('Seleccione una opción: ',menu_principal):
         case 1:
             dibujar_titulo('Cargar archivo .csv',char='-', cant=3)
-            while True:
-                opcion = pedir_opcion_listado('Elija una opcion: ',['Cargar un archivo existente','Crear uno nuevo'])
-                if opcion == 1:
-                    exito,mensaje, ruta = cargar_paises(paises)
-                    dibujar_titulo(f'{mensaje}',char='*',cant=3)
-                    if not exito:
-                        continue
-                else:
-                    ruta = 'paises.csv'
-                break
+            if not ruta:
+                while True:
+                    opcion = pedir_opcion_listado('Elija una opcion: ',['Cargar un archivo existente','Crear uno nuevo'])
+                    if opcion == 1:
+                        exito,mensaje, ruta = cargar_paises(paises)
+                        dibujar_titulo(f'{mensaje}',char='*',cant=3)
+                        if not exito:
+                            continue
+                    else:
+                        ruta = generar_nombre_archivo('paises',extension='csv')                        
+                        dibujar_titulo('Archivo creado con exito',char='*',cant=3)
+                    break
+            else:
+                dibujar_titulo(f'DENEGADO - Ya existe un archivo en uso',char='*',cant=3)
         case 2:
             dibujar_titulo('Agregar un país',char='-', cant=3)
             if not ruta:
-                dibujar_titulo(f'Debe cargar un archivo para poder operar',char='*',cant=3)
+                dibujar_titulo(f'DENEGADO - Debe cargar un archivo para poder operar',char='*',cant=3)
                 continue
             if crear_pais_consola(paises,continentes):
                 guardar_paises_en_csv(paises,ruta)
@@ -37,7 +42,7 @@ while True:
         case 3:
             dibujar_titulo('Actualizar un país',char='-', cant=3)
             if not paises:
-                dibujar_titulo(f'Debe cargar un archivo para poder operar',char='*',cant=3)
+                dibujar_titulo(f'DENEGADO - Debe cargar un archivo para poder operar',char='*',cant=3)
                 continue                
             pais = pedir_un_pais('Seleccione el país que quiere actualizar: ',paises)
             opcion = pedir_opcion_listado('Elija una opción: ',opciones_actualizar)
@@ -54,13 +59,13 @@ while True:
         case 4:
             dibujar_titulo('Buscar pais (coincidencia parcial o exacta)',char='-', cant=3)
             if not paises:
-                dibujar_titulo(f'Debe cargar un archivo para poder operar',char='*',cant=3)
+                dibujar_titulo(f'DENEGADO - Debe cargar un archivo para poder operar',char='*',cant=3)
                 continue
             mostrar_paises(buscar_paises_por_nombre(paises,pedir_cadena_solo_letras('Ingrese el nombre del pais que quiere ver: ')))
         case 5:
             dibujar_titulo('Filtrar paises',char='-', cant=3)
             if not paises:
-                dibujar_titulo(f'Debe cargar un archivo para poder operar',char='*',cant=3)
+                dibujar_titulo(f'DENEGADO - Debe cargar un archivo para poder operar',char='*',cant=3)
                 continue
             opcion = pedir_opcion_listado('Selecciones una opcion: ',menu_filtrado)
             if opcion == 1:               
@@ -76,7 +81,7 @@ while True:
         case 6:
             dibujar_titulo('Ordenar paises',char='-', cant=3)
             if not paises:
-                dibujar_titulo(f'Debe cargar un archivo para poder operar',char='*',cant=3)
+                dibujar_titulo(f'DENEGADO - Debe cargar un archivo para poder operar',char='*',cant=3)
                 continue
             print('Ordenar por:',end=' ')
             opcion = pedir_opcion_listado('Seleccione una opcion: ', menu_ordenamiento)
@@ -85,7 +90,7 @@ while True:
         case 7:
             dibujar_titulo('Mostrar estadisticas',char='-', cant=3)
             if not paises:
-                dibujar_titulo(f'Debe cargar un archivo para poder operar',char='*',cant=3)
+                dibujar_titulo(f'DENEGADO - Debe cargar un archivo para poder operar',char='*',cant=3)
                 continue
             match pedir_opcion_listado('Elija que estadistica quiere ver: ',menu_estadisticas):
                 case 1:
@@ -109,6 +114,9 @@ while True:
                     mostrar_cantidad_paises_por_continente(paises=paises,continentes=continentes)  
         case 8:
             dibujar_titulo('Eliminar un país',char='-', cant=3)
+            if not paises:
+                dibujar_titulo(f'DENEGADO - Debe cargar un archivo para poder operar',char='*',cant=3)
+                continue
             pais = pedir_un_pais('Seleccione el país que quiere eliminar: ',paises)
             if eliminar_pais(pais,paises):
                 guardar_paises_en_csv(paises,ruta)
